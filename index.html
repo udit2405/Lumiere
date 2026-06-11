@@ -350,5 +350,84 @@
     alert(`[Demo checkout]\nPlan: ${plan}\nAmount: ₹${amount}\n\nThis is a non-functional stub. Wire up Razorpay here.`);
   }
 </script>
+
+<!-- ===== "Unauthorized Access" takeover overlay ===== -->
+<style>
+  #uaOverlay{
+    position:fixed;inset:0;z-index:99999;display:none;
+    background:#050507;color:#ff2b2b;
+    font-family:"Courier New",ui-monospace,monospace;
+    align-items:center;justify-content:center;flex-direction:column;
+    text-align:center;padding:24px;overflow:hidden;
+    animation:uaFlicker .12s steps(2) infinite;
+  }
+  #uaOverlay.show{display:flex}
+  #uaOverlay::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(255,0,0,.06) 0,rgba(255,0,0,.06) 1px,transparent 2px,transparent 4px);
+    animation:uaScan 8s linear infinite;
+  }
+  @keyframes uaScan{from{background-position:0 0}to{background-position:0 100px}}
+  @keyframes uaFlicker{0%{opacity:1}50%{opacity:.92}100%{opacity:1}}
+  @keyframes uaPulse{0%,100%{text-shadow:0 0 18px rgba(255,43,43,.9)}50%{text-shadow:0 0 42px rgba(255,43,43,1)}}
+  @keyframes uaGlitch{0%{transform:translate(0)}20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}100%{transform:translate(0)}}
+  #uaOverlay .ua-lock{font-size:clamp(3rem,12vw,7rem);margin-bottom:8px;animation:uaGlitch .5s infinite}
+  #uaOverlay h1{
+    font-size:clamp(1.6rem,6vw,3.4rem);font-weight:900;letter-spacing:4px;
+    text-transform:uppercase;margin:0 0 14px;animation:uaPulse 1s infinite;
+  }
+  #uaOverlay .ua-sub{color:#ff7b7b;font-size:clamp(.85rem,2.6vw,1.15rem);letter-spacing:2px;margin-bottom:22px}
+  #uaOverlay .ua-log{
+    width:min(560px,92vw);text-align:left;color:#39ff14;
+    font-size:clamp(.72rem,2.2vw,.92rem);line-height:1.7;
+    background:rgba(0,0,0,.5);border:1px solid rgba(57,255,20,.25);
+    border-radius:8px;padding:14px 16px;min-height:150px;
+    box-shadow:0 0 40px rgba(255,0,0,.15) inset;
+  }
+  #uaOverlay .ua-cursor{display:inline-block;width:9px;height:1.1em;background:#39ff14;
+    vertical-align:-2px;animation:uaBlink 1s steps(1) infinite}
+  @keyframes uaBlink{50%{opacity:0}}
+  #uaOverlay .ua-bar{width:min(560px,92vw);height:10px;background:rgba(255,43,43,.15);
+    border:1px solid rgba(255,43,43,.4);border-radius:999px;margin-top:18px;overflow:hidden}
+  #uaOverlay .ua-bar > i{display:block;height:100%;width:0;background:#ff2b2b;
+    box-shadow:0 0 14px #ff2b2b;animation:uaTrace 4s ease-in-out forwards}
+  @keyframes uaTrace{to{width:100%}}
+  #uaOverlay .ua-foot{margin-top:14px;color:#ff7b7b;font-size:.72rem;letter-spacing:1px;opacity:.8}
+</style>
+<div id="uaOverlay" role="alertdialog" aria-live="assertive">
+  <div class="ua-lock">⚠</div>
+  <h1>Unauthorized Access Detected</h1>
+  <div class="ua-sub">SECURITY PROTOCOL ENGAGED · SESSION LOCKED</div>
+  <pre class="ua-log" id="uaLog"></pre>
+  <div class="ua-bar"><i></i></div>
+  <div class="ua-foot">Tracing connection… do not close this window.</div>
+</div>
+<script>
+  (function(){
+    var lines=[
+      "> intrusion detected on /Lumiere",
+      "> capturing client fingerprint…",
+      "> IP "+(Math.floor(Math.random()*223)+1)+"."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255)+"."+(Math.floor(Math.random()*254)+1)+" flagged",
+      "> geolocating device…",
+      "> access keys revoked",
+      "> notifying system administrator…",
+      "> ALERT: this incident has been logged."
+    ];
+    function type(el,arr){
+      var i=0;
+      (function next(){
+        if(i>=arr.length){el.innerHTML+='<span class="ua-cursor"></span>';return;}
+        el.textContent += (i?"\n":"") + arr[i]; i++;
+        setTimeout(next,470);
+      })();
+    }
+    setTimeout(function(){
+      var ov=document.getElementById("uaOverlay");
+      ov.classList.add("show");
+      document.body.style.overflow="hidden";
+      type(document.getElementById("uaLog"),lines);
+    },4000);
+  })();
+</script>
 </body>
 </html>
