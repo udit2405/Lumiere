@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumière — Premium Creator Membership</title>
+<style>
+  :root{
+    --bg:#0d0b14;
+    --bg-2:#15111f;
+    --card:#1c1730;
+    --accent:#c77dff;
+    --accent-2:#ff8fab;
+    --gold:#e0b973;
+    --text:#f3eefb;
+    --muted:#a99fc4;
+    --line:rgba(255,255,255,.08);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    background:radial-gradient(1200px 600px at 80% -10%,#241836,transparent),var(--bg);
+    color:var(--text);line-height:1.55;
+  }
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,11,20,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-size:1.45rem;font-weight:800;letter-spacing:.5px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:var(--muted);font-size:.95rem;font-weight:500;transition:.2s}
+  .nav-links a:hover{color:var(--text)}
+  .btn{
+    border:none;cursor:pointer;font-weight:600;border-radius:999px;
+    padding:11px 22px;font-size:.92rem;transition:transform .15s,box-shadow .2s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#1a1024;
+    box-shadow:0 8px 24px rgba(199,125,255,.3)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  .btn-vip{background:linear-gradient(90deg,var(--gold),#f3d79b);color:#2a1d05;
+    box-shadow:0 8px 24px rgba(224,185,115,.25)}
+
+  /* Hero */
+  .hero{padding:90px 0 70px;text-align:center;position:relative}
+  .hero .badge{display:inline-block;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--accent);border:1px solid rgba(199,125,255,.4);padding:6px 16px;border-radius:999px;margin-bottom:22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;line-height:1.1;margin-bottom:18px}
+  .hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{max-width:600px;margin:0 auto 32px;color:var(--muted);font-size:1.1rem}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  .section-head{text-align:center;margin:70px 0 36px}
+  .section-head h2{font-size:2rem;font-weight:700}
+  .section-head p{color:var(--muted);margin-top:8px}
+
+  /* Profile grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .25s;
+  }
+  .card:hover{transform:translateY(-6px);border-color:rgba(199,125,255,.5);
+    box-shadow:0 18px 40px rgba(0,0,0,.4)}
+  .avatar{height:200px;display:flex;align-items:center;justify-content:center;position:relative}
+  .avatar .initials{font-size:3rem;font-weight:800;color:rgba(255,255,255,.85)}
+  .online{position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:6px;
+    font-size:.72rem;background:rgba(0,0,0,.35);padding:4px 10px;border-radius:999px;color:#cfeecf}
+  .dot{width:8px;height:8px;border-radius:50%;background:#5fe08a;box-shadow:0 0 8px #5fe08a}
+  .card-body{padding:16px 18px 20px}
+  .card-body h3{font-size:1.1rem;display:flex;align-items:center;gap:8px}
+  .verified{color:var(--accent);font-size:.85rem}
+  .card-body .meta{color:var(--muted);font-size:.85rem;margin:4px 0 12px}
+  .tags{display:flex;gap:7px;flex-wrap:wrap}
+  .tag{font-size:.72rem;color:var(--accent);background:rgba(199,125,255,.12);
+    padding:4px 10px;border-radius:999px}
+
+  /* Premium / paywall */
+  .premium{position:relative;margin-top:24px}
+  .locked-grid{filter:blur(7px);pointer-events:none;user-select:none}
+  .paywall{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;background:linear-gradient(180deg,rgba(13,11,20,.4),rgba(13,11,20,.85));
+    border-radius:var(--radius);padding:30px;
+  }
+  .paywall .lock{font-size:2.4rem;margin-bottom:12px}
+  .paywall h3{font-size:1.6rem;margin-bottom:8px}
+  .paywall p{color:var(--muted);max-width:420px;margin-bottom:20px}
+
+  /* Pricing */
+  .pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:10px}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;text-align:center;position:relative}
+  .plan.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 18px 50px rgba(199,125,255,.2)}
+  .plan .ribbon{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#1a1024;font-size:.72rem;
+    font-weight:700;padding:5px 14px;border-radius:999px;letter-spacing:.5px}
+  .plan h3{font-size:1.2rem;margin-bottom:6px}
+  .plan .price{font-size:2.4rem;font-weight:800;margin:10px 0}
+  .plan .price small{font-size:.95rem;color:var(--muted);font-weight:500}
+  .plan ul{list-style:none;text-align:left;margin:18px 0 24px}
+  .plan li{padding:7px 0;color:var(--muted);font-size:.92rem;display:flex;gap:10px}
+  .plan li::before{content:"✓";color:var(--accent);font-weight:800}
+  .plan .btn{width:100%}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(5,4,10,.75);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--bg-2);border:1px solid var(--line);border-radius:20px;
+    max-width:460px;width:100%;overflow:hidden;animation:pop .25s ease}
+  @keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal-banner{height:150px;display:flex;align-items:center;justify-content:center}
+  .modal-banner .initials{font-size:3.4rem;font-weight:800;color:rgba(255,255,255,.9)}
+  .modal-body{padding:24px}
+  .modal-body h2{display:flex;align-items:center;gap:10px;font-size:1.5rem}
+  .modal-body .meta{color:var(--muted);margin:6px 0 16px}
+  .modal-body .bio{color:#d8cfee;margin-bottom:18px}
+  .modal-row{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:.92rem}
+  .modal-row span:first-child{color:var(--muted)}
+  .modal-actions{display:flex;gap:12px;margin-top:22px}
+  .modal-actions .btn{flex:1}
+  .close-x{position:absolute;top:16px;right:20px;font-size:1.6rem;color:#fff;cursor:pointer;
+    background:rgba(0,0,0,.4);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+  footer{border-top:1px solid var(--line);margin-top:80px;padding:34px 0;text-align:center;color:var(--muted);font-size:.88rem}
+  .disclaimer{max-width:720px;margin:14px auto 0;font-size:.78rem;color:#766c8f}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">Lumière</div>
+    <nav class="nav-links">
+      <a href="#creators">Creators</a>
+      <a href="#premium">Premium</a>
+      <a href="#pricing">Pricing</a>
+      <button class="btn btn-vip" onclick="document.getElementById('vip').scrollIntoView({behavior:'smooth'})">★ VIP Members</button>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero container">
+  <span class="badge">Verified Creators · Members Only</span>
+  <h1>Exclusive content from <span>creators you love</span></h1>
+  <p>A members-only platform for verified independent creators. Subscribe to unlock premium galleries, livestreams and direct messages.</p>
+  <div class="hero-cta">
+    <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Become a Member</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('creators').scrollIntoView({behavior:'smooth'})">Browse Creators</button>
+  </div>
+</section>
+
+<!-- Creators grid -->
+<section id="creators" class="container">
+  <div class="section-head">
+    <h2>Featured Creators</h2>
+    <p>All profiles are verified. Tap a card to view the full profile.</p>
+  </div>
+  <div class="grid" id="creatorGrid"></div>
+</section>
+
+<!-- VIP Members (the header button target) -->
+<section id="vip" class="container">
+  <div class="section-head">
+    <h2>★ VIP Members Directory</h2>
+    <p>Top-tier verified creators with priority messaging and live sessions.</p>
+  </div>
+  <div class="grid" id="vipGrid"></div>
+</section>
+
+<!-- Premium locked section -->
+<section id="premium" class="container">
+  <div class="section-head">
+    <h2>Premium Gallery</h2>
+    <p>Unlock the full collection with any paid membership.</p>
+  </div>
+  <div class="premium">
+    <div class="grid locked-grid" id="lockedGrid"></div>
+    <div class="paywall">
+      <div class="lock">🔒</div>
+      <h3>Premium content is locked</h3>
+      <p>Subscribe to a membership plan to unlock 200+ premium galleries, exclusive livestreams and creator DMs.</p>
+      <button class="btn btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Unlock Premium</button>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="container">
+  <div class="section-head">
+    <h2>Choose your membership</h2>
+    <p>Cancel anytime. Secure payments via Razorpay.</p>
+  </div>
+  <div class="pricing">
+    <div class="plan">
+      <h3>Basic</h3>
+      <div class="price">₹299<small>/mo</small></div>
+      <ul>
+        <li>Access to 50 creators</li>
+        <li>Standard galleries</li>
+        <li>Community feed</li>
+      </ul>
+      <button class="btn btn-ghost" onclick="checkout('Basic',299)">Subscribe</button>
+    </div>
+    <div class="plan featured">
+      <div class="ribbon">MOST POPULAR</div>
+      <h3>Premium</h3>
+      <div class="price">₹799<small>/mo</small></div>
+      <ul>
+        <li>Unlimited creator access</li>
+        <li>All premium galleries</li>
+        <li>Exclusive livestreams</li>
+        <li>Direct messaging</li>
+      </ul>
+      <button class="btn btn-primary" onclick="checkout('Premium',799)">Subscribe</button>
+    </div>
+    <div class="plan">
+      <h3>VIP</h3>
+      <div class="price">₹1,999<small>/mo</small></div>
+      <ul>
+        <li>Everything in Premium</li>
+        <li>Priority DM responses</li>
+        <li>1:1 video sessions</li>
+        <li>Early content access</li>
+      </ul>
+      <button class="btn btn-vip" onclick="checkout('VIP',1999)">Go VIP</button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" style="position:relative">
+    <div class="close-x" onclick="closeModal()">×</div>
+    <div class="modal-banner" id="modalBanner"><div class="initials" id="modalInitials"></div></div>
+    <div class="modal-body">
+      <h2 id="modalName"></h2>
+      <div class="meta" id="modalMeta"></div>
+      <p class="bio" id="modalBio"></p>
+      <div class="modal-row"><span>Subscribers</span><span id="modalSubs"></span></div>
+      <div class="modal-row"><span>Content</span><span id="modalContent"></span></div>
+      <div class="modal-row"><span>Response time</span><span id="modalResp"></span></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="checkout('Creator Subscription',499)">Subscribe ₹499/mo</button>
+        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="logo" style="font-size:1.2rem">Lumière</div>
+  <p style="margin-top:8px">© 2026 Lumière Media. All creators are 18+ and identity-verified.</p>
+  <p class="disclaimer">This is a fictional demo / case-study project. All creator names, bios and statistics are randomly generated and do not represent real people. No real services are offered. Payment integration is a non-functional stub for demonstration only.</p>
+</footer>
+
+<script>
+  // ---- Sample data (fully fictional, generated) ----
+  const firstNames=["Aria","Mila","Zoe","Layla","Eva","Nina","Ruby","Sara","Iris","Lana","Maya","Tara","Elle","Coco","Vera"];
+  const cities=["Mumbai","Delhi","Bangalore","Goa","Pune","Hyderabad","Chennai","Jaipur"];
+  const tagPool=["Fashion","Lifestyle","Fitness","Travel","Dance","Art","Music","Wellness","Photography","Cosplay"];
+  const bios=[
+    "Independent lifestyle creator sharing behind-the-scenes content, photoshoots and weekly livestreams with my community.",
+    "Dancer and fitness enthusiast. Subscribers get exclusive routines, vlogs and direct chat access.",
+    "Fashion and travel content creator. Join for early access to shoots and members-only stories.",
+    "Artist and model posting daily creative content. Premium members unlock my full portfolio.",
+    "Wellness coach and performer. Weekly live sessions, Q&As and personalised shoutouts for members."
+  ];
+  const grads=[
+    "linear-gradient(135deg,#c77dff,#7b2ff7)",
+    "linear-gradient(135deg,#ff8fab,#c9184a)",
+    "linear-gradient(135deg,#e0b973,#b07d2b)",
+    "linear-gradient(135deg,#5eead4,#0d9488)",
+    "linear-gradient(135deg,#a78bfa,#6d28d9)",
+    "linear-gradient(135deg,#f9a8d4,#be185d)"
+  ];
+  const rand=a=>a[Math.floor(Math.random()*a.length)];
+  const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+
+  function makeCreator(i){
+    const name=rand(firstNames)+" "+String.fromCharCode(65+randInt(0,25))+".";
+    const initials=name.split(" ").map(w=>w[0]).join("");
+    const tags=[...new Set([rand(tagPool),rand(tagPool)])];
+    return{
+      name, initials, grad:grads[i%grads.length],
+      city:rand(cities), age:randInt(21,32),
+      tags, bio:rand(bios),
+      subs:randInt(2,98)+"k", content:randInt(120,1400)+" posts",
+      resp:randInt(1,12)+" min", online:Math.random()>.4
+    };
+  }
+
+  function cardHTML(c){
+    return `<div class="card" data-name="${c.name}">
+      <div class="avatar" style="background:${c.grad}">
+        ${c.online?'<div class="online"><span class="dot"></span>Online</div>':''}
+        <div class="initials">${c.initials}</div>
+      </div>
+      <div class="card-body">
+        <h3>${c.name}<span class="verified">✓</span></h3>
+        <div class="meta">${c.city} · ${c.age}</div>
+        <div class="tags">${c.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+      </div>
+    </div>`;
+  }
+
+  function fill(id,n){
+    const data=[];
+    const el=document.getElementById(id);
+    for(let i=0;i<n;i++){const c=makeCreator(i);data.push(c);}
+    el.innerHTML=data.map(cardHTML).join("");
+    [...el.children].forEach((card,i)=>card.onclick=()=>openModal(data[i]));
+    return data;
+  }
+
+  fill("creatorGrid",8);
+  fill("vipGrid",4);
+  fill("lockedGrid",4);
+
+  // ---- Modal ----
+  function openModal(c){
+    document.getElementById("modalBanner").style.background=c.grad;
+    document.getElementById("modalInitials").textContent=c.initials;
+    document.getElementById("modalName").innerHTML=c.name+' <span class="verified">✓ Verified</span>';
+    document.getElementById("modalMeta").textContent=`${c.city} · ${c.age} · ${c.tags.join(", ")}`;
+    document.getElementById("modalBio").textContent=c.bio;
+    document.getElementById("modalSubs").textContent=c.subs;
+    document.getElementById("modalContent").textContent=c.content;
+    document.getElementById("modalResp").textContent="~"+c.resp;
+    document.getElementById("modal").classList.add("open");
+  }
+  function closeModal(){document.getElementById("modal").classList.remove("open");}
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+  // ---- Checkout stub (replace with real Razorpay integration) ----
+  function checkout(plan,amount){
+    // In production: load https://checkout.razorpay.com/v1/checkout.js
+    // and call new Razorpay({key, amount: amount*100, currency:'INR', ...}).open()
+    alert(`[Demo checkout]\nPlan: ${plan}\nAmount: ₹${amount}\n\nThis is a non-functional stub. Wire up Razorpay here.`);
+  }
+</script>
+</body>
+</html>
